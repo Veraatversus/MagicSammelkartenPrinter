@@ -1,0 +1,463 @@
+﻿<Window
+    x:Class="Sammelkarten.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:System="clr-namespace:System;assembly=mscorlib"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+    xmlns:local="clr-namespace:Sammelkarten"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:scryfall="clr-namespace:Scryfall.API.Models"
+    xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    Title="MainWindow"
+    d:DataContext="{d:DesignInstance {x:Type local:SearchViewModel}}"
+    d:DesignHeight="221"
+    d:DesignWidth="774"
+    mc:Ignorable="d">
+    <Window.Resources>
+        <local:MyInvertBooleanToVisibilityConverter x:Key="InvertBooleanVisibilityConverter" />
+        <local:MyBooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <local:BitmapToImageSourceConverter x:Key="BitmapToImageSourceConverter" />
+        <local:InvertBooleanConverter x:Key="InvertBooleanConverter" />
+        <local:ByteArrayToImageConverter x:Key="ByteArrayToImageConverter" />
+        <local:PropertyStringConverter x:Key="PropertyStringConverter" />
+
+        <Style x:Key="ImageGrid" TargetType="{x:Type ListView}">
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Setter Property="Height" Value="{Binding Value, ElementName=slImageSize}" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <Border
+                                        Padding="{TemplateBinding Control.Padding}"
+                                        Background="{TemplateBinding Panel.Background}"
+                                        BorderBrush="{TemplateBinding Border.BorderBrush}"
+                                        BorderThickness="{TemplateBinding Border.BorderThickness}"
+                                        SnapsToDevicePixels="True">
+                                        <ContentPresenter
+                                            HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}"
+                                            VerticalAlignment="{TemplateBinding Control.VerticalContentAlignment}"
+                                            Content="{TemplateBinding ContentControl.Content}"
+                                            ContentTemplate="{TemplateBinding ContentControl.ContentTemplate}"
+                                            SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <WrapPanel IsItemsHost="True" />
+                        <!--<wpftk:VirtualizingWrapPanel IsItemsHost="True"    />-->
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+            <Setter Property="local:SelectorHelper.ScrollingLines" Value="10" />
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+            <Grid
+                Grid.Column="1"
+                Margin="20,2"
+                VerticalAlignment="Top"
+                Panel.ZIndex="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Slider
+                    x:Name="slImageSize"
+                    Grid.Column="1"
+                    DataContext="{DynamicResource ImageHeight}"
+                    LargeChange="50"
+                    Maximum="800"
+                    Minimum="50"
+                    SmallChange="50"
+                    Value="{Binding ., Mode=TwoWay, Source={StaticResource ImageHeight}}" />
+            </Grid>
+
+            <TabControl
+                x:Name="tcSearch"
+                Grid.Row="1"
+                Grid.ColumnSpan="2">
+                <!--<TabItem Header="Full Search">
+                -->
+                <!--<Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <StackPanel HorizontalAlignment="Center">
+                                <TextBlock>
+                                    <TextBlock.Inlines>
+                                        <Run Text="Karte: " />
+                                        <Run Text="{Binding CurrentPosition}" />
+                                        <Run Text=" von " />
+                                        <Run Text="{Binding WebDoc.BilderAnzahl}" />
+                                    </TextBlock.Inlines>
+                                </TextBlock>
+                                <Label Content="{Binding CurrentCard.Name}" />
+                            </StackPanel>
+                            <Image Grid.Row="1" HorizontalAlignment="Center" Source="{Binding CurrentCard.Data, Converter={StaticResource ByteArrayToImageConverter}}" />
+                        </Grid>
+                    </Grid>-->
+                <!--
+                </TabItem>-->
+                <TabItem Header="Browser">
+                    <Grid
+                        Background="Transparent"
+                        IsHitTestVisible="True"
+                        PreviewMouseDown="Browser_MouseUp">
+                        <WindowsFormsHost
+                            Background="Transparent"
+                            MouseDown="WindowsFormsHost_MouseDown"
+                            MouseUp="WindowsFormsHost_MouseUp"
+                            PreviewMouseDown="WindowsFormsHost_PreviewMouseDown"
+                            PreviewMouseUp="WindowsFormsHost_PreviewMouseUp">
+                            <forms:WebBrowser
+                                x:Name="Browser"
+                                PreviewKeyDown="Browser_PreviewKeyDown"
+                                ScriptErrorsSuppressed="True" />
+                        </WindowsFormsHost>
+                    </Grid>
+                </TabItem>
+
+                <TabItem Header="Collection">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="0" />
+                        </Grid.ColumnDefinitions>
+                        <ListView
+                            x:Name="lvCollection"
+                            ItemsSource="{Binding Path=(local:CardCollection.Current).CardsToPrint}"
+                            ScrollViewer.ScrollChanged="lvSearch_ScrollChanged"
+                            Style="{StaticResource ImageGrid}"
+                            Template="{DynamicResource ListViewControlTemplate}" />
+                        <GridSplitter
+                            Grid.Column="1"
+                            Width="5"
+                            HorizontalAlignment="Stretch" />
+                        <syncfusion:PropertyGrid
+                            x:Name="PropGrid2"
+                            Grid.Column="2"
+                            ButtonPanelVisibility="Collapsed"
+                            PropertyExpandMode="NestedMode"
+                            SearchBoxVisibility="Collapsed"
+                            SelectedObject="{Binding SelectedItem, ElementName=lvCollection}" />
+                    </Grid>
+                </TabItem>
+
+                <TabItem Header="Single Search">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Button
+                                x:Name="btnHp"
+                                Margin="5,2"
+                                Padding="10,0"
+                                Command="{Binding OpenHomePageCommand}"
+                                Content="Öffne Website" />
+                            <syncfusion:SfTextBoxExt
+                                x:Name="tbSearch"
+                                Grid.Column="1"
+                                Margin="3"
+                                BorderBrush="Black"
+                                PreviewKeyUp="tbSearch_PreviewKeyUp"
+                                Watermark="{Binding WatermarkSearch}" />
+                            <ComboBox
+                                x:Name="cbSortOrder"
+                                Grid.Column="2"
+                                MinWidth="100"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                ItemsSource="{Binding Source={local:EnumBindingSource {x:Type scryfall:SortOrder}}}"
+                                SelectedIndex="0" />
+                            <ComboBox
+                                x:Name="cbSortDirection"
+                                Grid.Column="3"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                ItemsSource="{Binding Source={local:EnumBindingSource {x:Type scryfall:SortDirection}}}"
+                                SelectedIndex="0" />
+                            <Button
+                                x:Name="btnSearch"
+                                Grid.Column="4"
+                                Margin="10,2"
+                                Padding="15,0"
+                                Click="btnSearch_Click"
+                                Content="Search"
+                                IsEnabled="{Binding IsLoadingPage, Converter={StaticResource InvertBooleanConverter}}" />
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="5" />
+                                    <ColumnDefinition Width="0" />
+                                </Grid.ColumnDefinitions>
+                                <ListView
+                                    x:Name="lvSearch"
+                                    ItemsSource="{Binding Path=(local:CardCollection.Current).CurrentSearch.Data}"
+                                    ScrollViewer.ScrollChanged="lvSearch_ScrollChanged"
+                                    Style="{StaticResource ImageGrid}" />
+
+                                <GridSplitter
+                                    Grid.Column="1"
+                                    Width="5"
+                                    HorizontalAlignment="Stretch" />
+                                <syncfusion:PropertyGrid
+                                    x:Name="PropGrid"
+                                    Grid.Column="2"
+                                    ButtonPanelVisibility="Collapsed"
+                                    PropertyExpandMode="NestedMode"
+                                    SearchBoxVisibility="Collapsed"
+                                    SelectedObject="{Binding SelectedItem, ElementName=lvSearch}" />
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </Grid>
+        <StatusBar Grid.Row="2">
+            <StatusBar.ItemContainerStyle>
+                <Style TargetType="StatusBarItem">
+                    <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                </Style>
+            </StatusBar.ItemContainerStyle>
+            <Grid VerticalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Margin="0,0,5,0" Text="Collection Name:" />
+                <TextBox
+                    Grid.Column="1"
+                    MinWidth="80"
+                    Text="{Binding Path=(local:CardCollection.Current).Name, Mode=TwoWay}" />
+                <Button
+                    Grid.Row="1"
+                    Margin="5,5"
+                    Command="{Binding LoadCollectionCommand}"
+                    Content="Load" />
+                <Button
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="5,5"
+                    Command="{Binding SaveCollectionCommand}"
+                    Content="Save" />
+            </Grid>
+
+            <Grid VerticalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Padding="5,2"
+                    HorizontalContentAlignment="Center"
+                    BorderBrush="Black"
+                    BorderThickness="0,0,2,2"
+                    Content="Cards" />
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Padding="5,2"
+                    HorizontalContentAlignment="Center"
+                    BorderBrush="Black"
+                    BorderThickness="2,0,2,2"
+                    Content="Faces" />
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    Width="100"
+                    Padding="5,2"
+                    HorizontalContentAlignment="Center"
+                    BorderBrush="Black"
+                    BorderThickness="2,0,2,2"
+                    Content="Faces to Print" />
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="3"
+                    Padding="5,2"
+                    HorizontalContentAlignment="Center"
+                    BorderBrush="Black"
+                    BorderThickness="2,0,2,2"
+                    Content="Pages" />
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="4"
+                    Padding="5,2"
+                    HorizontalContentAlignment="Center"
+                    BorderBrush="Black"
+                    BorderThickness="2,0,0,2"
+                    Content="Files" />
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Padding="5,2"
+                    HorizontalContentAlignment="Center"
+                    BorderBrush="Black"
+                    BorderThickness="0,2,2,0"
+                    Content="{Binding Path=(local:CardCollection.Current).CountCards}" />
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Padding="5,2"
+                    HorizontalContentAlignment="Center"
+                    BorderBrush="Black"
+                    BorderThickness="2,2,2,0"
+                    Content="{Binding Path=(local:CardCollection.Current).CountFaces}" />
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    Padding="5,2"
+                    HorizontalContentAlignment="Center"
+                    BorderBrush="Black"
+                    BorderThickness="2,2,2,0"
+                    Content="{Binding Path=(local:CardCollection.Current).CountPrint}" />
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="3"
+                    Padding="5,2"
+                    HorizontalContentAlignment="Center"
+                    BorderBrush="Black"
+                    BorderThickness="2,2,2,0"
+                    Content="{Binding Path=(local:CardCollection.Current).CountPages}"
+                    ContentStringFormat="{}{0:F}" />
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="4"
+                    Padding="5,2"
+                    HorizontalContentAlignment="Center"
+                    BorderBrush="Black"
+                    BorderThickness="2,2,0,0"
+                    Content="{Binding Path=(local:CardCollection.Current).CountFiles}"
+                    ContentStringFormat="{}{0:F}" />
+            </Grid>
+            <Separator />
+            <Grid>
+                <StackPanel
+                    Background="Transparent"
+                    Orientation="Horizontal"
+                    Visibility="{Binding CardsToDoc.IsRunning, Converter={StaticResource InvertBooleanVisibilityConverter}}">
+                    <Button
+                        Margin="5,0"
+                        Padding="5"
+                        VerticalAlignment="Center"
+                        Command="{Binding OpenFolderCommand}"
+                        Content="Öffne Ordner" />
+                    <Button
+                        Margin="5,0"
+                        Padding="5"
+                        VerticalAlignment="Center"
+                        Command="{Binding StartPrintingCommand, IsAsync=True}"
+                        Content="Save To Doc"
+                        IsEnabled="{Binding CardsToDoc.IsRunning, Converter={StaticResource InvertBooleanConverter}}" />
+                    <Label VerticalAlignment="Center" Content="Print Format: " />
+                    <ComboBox
+                        x:Name="cbPicFormat"
+                        MinWidth="100"
+                        VerticalAlignment="Center"
+                        ItemsSource="{Binding Source={local:EnumBindingSource {x:Type local:ImageTypeEnum}}}"
+                        SelectedValue="{Binding Path=(local:SearchViewModel.ImageFormat), Mode=TwoWay}" />
+                </StackPanel>
+                <Grid Visibility="{Binding CardsToDoc.IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <TextBlock>
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0} / {1}">
+                                    <Binding Path="CardsToDoc.WordDoc.CountPictures" />
+                                    <Binding Path="(local:CardCollection.Current).CountPrint" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                        <ProgressBar
+                            Grid.Row="1"
+                            Margin="5,1"
+                            Maximum="{Binding Path=(local:CardCollection.Current).CountPrint}"
+                            Value="{Binding CardsToDoc.WordDoc.CountPictures}" />
+                    </Grid>
+                    <Button
+                        Grid.Column="1"
+                        Padding="20,5"
+                        Command="{Binding StopCommand}"
+                        Content="X"
+                        IsEnabled="{Binding CardsToDoc.IsRunning}" />
+                </Grid>
+            </Grid>
+
+            <!--<TextBlock>
+                <TextBlock.Text>
+                    <MultiBinding>
+                        <Binding Path="(local:CardCollection.Current).CountCards" />
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>-->
+        </StatusBar>
+    </Grid>
+</Window>

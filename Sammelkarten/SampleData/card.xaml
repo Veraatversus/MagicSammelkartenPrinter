@@ -1,0 +1,41 @@
+﻿<Models:Card
+    xmlns:Models="clr-namespace:Scryfall.API.Models"
+    Name="Akoum Firebird"
+    Artist="Chris Rahn"
+    CollectorNumber="138"
+    Count="69"
+    FlavorText="Nibh hac magnis"
+    Frame="2015"
+    HandModifier="Diam commodo"
+    IsInCollection="False"
+    LifeModifier="Donec dis dignissim cursus"
+    Loyalty="Blandit arcu congue curae"
+    ManaCost="Aliquet convallis aptent dictumst"
+    OracleText="Flying, haste Akoum Firebird attacks each combat if able. Landfall — Whenever a land enters the battlefield under your control, you may pay {4}{R}{R}. If you do, return Akoum Firebird from your graveyard to the battlefield."
+    Power="Parturient ante"
+    PrintsSearchUri=""
+    RulingsUri="Maecenas praesent"
+    ScryfallSetUri="Libero ligula"
+    ScryfallUri="Cras integer class phasellus"
+    Set="Dictum eget"
+    SetName="Vestibulum etiam lectus"
+    SetSearchUri="Faucibus elit"
+    ShowImage="https://img.scryfall.com/cards/small/en/bfz/138.jpg?1517813031"
+    StorySpotlightUri="Interdum augue lobortis"
+    Toughness="Eleifend nam sed auctor"
+    TypeLine="Vivamus accumsan bibendum"
+    Uri="Curabitur vestibulum aliquam"
+    Watermark="Mattis hendrerit mauris proin">
+    <Models:Card.ImageUris>
+        <Models:ImageUri
+            ArtCrop="https://img.scryfall.com/cards/art_crop/en/bfz/138.jpg?1517813031"
+            BorderCrop="https://img.scryfall.com/cards/border_crop/en/bfz/138.jpg?1517813031"
+            Large="https://img.scryfall.com/cards/large/en/bfz/138.jpg?1517813031"
+            Normal="https://img.scryfall.com/cards/normal/en/bfz/138.jpg?1517813031"
+            Png="https://img.scryfall.com/cards/png/en/bfz/138.png?1517813031"
+            Small="https://img.scryfall.com/cards/small/en/bfz/138.jpg?1517813031" />
+    </Models:Card.ImageUris>
+    <Models:Card.Legalities>
+        <Models:Legality />
+    </Models:Card.Legalities>
+</Models:Card>

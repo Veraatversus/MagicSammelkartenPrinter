@@ -91,7 +91,11 @@
     <Compile Include="Models\CardCollection.cs" />
     <Compile Include="Models\ObservableCardCollection.cs" />
     <Compile Include="Models\SearchMode.cs" />
+    <Compile Include="SFBrowser.xaml.cs">
+      <DependentUpon>SFBrowser.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utilities\DependencyObjectExtensions.cs" />
+    <Compile Include="Utilities\MessageFilter.cs" />
     <Compile Include="Utilities\SelectorHelper.cs" />
     <Compile Include="Services\CardsToDocService.cs" />
     <Compile Include="Utilities\Extensions.cs" />
@@ -164,6 +168,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </DesignData>
+    <Page Include="SFBrowser.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

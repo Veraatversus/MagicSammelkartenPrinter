@@ -31,18 +31,8 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="ListBoxItem">
-                                    <Border
-                                        Padding="{TemplateBinding Control.Padding}"
-                                        Background="{TemplateBinding Panel.Background}"
-                                        BorderBrush="{TemplateBinding Border.BorderBrush}"
-                                        BorderThickness="{TemplateBinding Border.BorderThickness}"
-                                        SnapsToDevicePixels="True">
-                                        <ContentPresenter
-                                            HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}"
-                                            VerticalAlignment="{TemplateBinding Control.VerticalContentAlignment}"
-                                            Content="{TemplateBinding ContentControl.Content}"
-                                            ContentTemplate="{TemplateBinding ContentControl.ContentTemplate}"
-                                            SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
+                                    <Border Padding="{TemplateBinding Control.Padding}" Background="{TemplateBinding Panel.Background}" BorderBrush="{TemplateBinding Border.BorderBrush}" BorderThickness="{TemplateBinding Border.BorderThickness}" SnapsToDevicePixels="True">
+                                        <ContentPresenter HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding Control.VerticalContentAlignment}" Content="{TemplateBinding ContentControl.Content}" ContentTemplate="{TemplateBinding ContentControl.ContentTemplate}" SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
                                     </Border>
                                 </ControlTemplate>
                             </Setter.Value>
@@ -82,30 +72,15 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
-            <Grid
-                Grid.Column="1"
-                Margin="20,2"
-                VerticalAlignment="Top"
-                Panel.ZIndex="2">
+            <Grid Grid.Column="1" Margin="20,2" VerticalAlignment="Top" Panel.ZIndex="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Slider
-                    x:Name="slImageSize"
-                    Grid.Column="1"
-                    DataContext="{DynamicResource ImageHeight}"
-                    LargeChange="50"
-                    Maximum="800"
-                    Minimum="50"
-                    SmallChange="50"
-                    Value="{Binding ., Mode=TwoWay, Source={StaticResource ImageHeight}}" />
+                <Slider x:Name="slImageSize" Grid.Column="1" DataContext="{DynamicResource ImageHeight}" LargeChange="50" Maximum="800" Minimum="50" SmallChange="50" Value="{Binding ., Mode=TwoWay, Source={StaticResource ImageHeight}}" />
             </Grid>
 
-            <TabControl
-                x:Name="tcSearch"
-                Grid.Row="1"
-                Grid.ColumnSpan="2">
+            <TabControl x:Name="tcSearch" Grid.Row="1" Grid.ColumnSpan="2">
                 <!--<TabItem Header="Full Search">
                 -->
                 <!--<Grid>
@@ -136,7 +111,8 @@
                 <!--
                 </TabItem>-->
                 <TabItem Header="Browser">
-                    <Grid
+                    <local:SFBrowser x:Name="Browser" />
+                    <!--<Grid
                         Background="Transparent"
                         IsHitTestVisible="True"
                         PreviewMouseDown="Browser_MouseUp">
@@ -151,7 +127,7 @@
                                 PreviewKeyDown="Browser_PreviewKeyDown"
                                 ScriptErrorsSuppressed="True" />
                         </WindowsFormsHost>
-                    </Grid>
+                    </Grid>-->
                 </TabItem>
 
                 <TabItem Header="Collection">
@@ -161,23 +137,9 @@
                             <ColumnDefinition Width="5" />
                             <ColumnDefinition Width="0" />
                         </Grid.ColumnDefinitions>
-                        <ListView
-                            x:Name="lvCollection"
-                            ItemsSource="{Binding Path=(local:CardCollection.Current).CardsToPrint}"
-                            ScrollViewer.ScrollChanged="lvSearch_ScrollChanged"
-                            Style="{StaticResource ImageGrid}"
-                            Template="{DynamicResource ListViewControlTemplate}" />
-                        <GridSplitter
-                            Grid.Column="1"
-                            Width="5"
-                            HorizontalAlignment="Stretch" />
-                        <syncfusion:PropertyGrid
-                            x:Name="PropGrid2"
-                            Grid.Column="2"
-                            ButtonPanelVisibility="Collapsed"
-                            PropertyExpandMode="NestedMode"
-                            SearchBoxVisibility="Collapsed"
-                            SelectedObject="{Binding SelectedItem, ElementName=lvCollection}" />
+                        <ListView x:Name="lvCollection" ItemsSource="{Binding Path=(local:CardCollection.Current).CardsToPrint}" ScrollViewer.ScrollChanged="lvSearch_ScrollChanged" Style="{StaticResource ImageGrid}" Template="{DynamicResource ListViewControlTemplate}" />
+                        <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+                        <syncfusion:PropertyGrid x:Name="PropGrid2" Grid.Column="2" ButtonPanelVisibility="Collapsed" PropertyExpandMode="NestedMode" SearchBoxVisibility="Collapsed" SelectedObject="{Binding SelectedItem, ElementName=lvCollection}" />
                     </Grid>
                 </TabItem>
 
@@ -195,42 +157,11 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <Button
-                                x:Name="btnHp"
-                                Margin="5,2"
-                                Padding="10,0"
-                                Command="{Binding OpenHomePageCommand}"
-                                Content="Öffne Website" />
-                            <syncfusion:SfTextBoxExt
-                                x:Name="tbSearch"
-                                Grid.Column="1"
-                                Margin="3"
-                                BorderBrush="Black"
-                                PreviewKeyUp="tbSearch_PreviewKeyUp"
-                                Watermark="{Binding WatermarkSearch}" />
-                            <ComboBox
-                                x:Name="cbSortOrder"
-                                Grid.Column="2"
-                                MinWidth="100"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                ItemsSource="{Binding Source={local:EnumBindingSource {x:Type scryfall:SortOrder}}}"
-                                SelectedIndex="0" />
-                            <ComboBox
-                                x:Name="cbSortDirection"
-                                Grid.Column="3"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                ItemsSource="{Binding Source={local:EnumBindingSource {x:Type scryfall:SortDirection}}}"
-                                SelectedIndex="0" />
-                            <Button
-                                x:Name="btnSearch"
-                                Grid.Column="4"
-                                Margin="10,2"
-                                Padding="15,0"
-                                Click="btnSearch_Click"
-                                Content="Search"
-                                IsEnabled="{Binding IsLoadingPage, Converter={StaticResource InvertBooleanConverter}}" />
+                            <Button x:Name="btnHp" Margin="5,2" Padding="10,0" Command="{Binding OpenHomePageCommand}" Content="Öffne Website" />
+                            <syncfusion:SfTextBoxExt x:Name="tbSearch" Grid.Column="1" Margin="3" BorderBrush="Black" PreviewKeyUp="tbSearch_PreviewKeyUp" Watermark="{Binding WatermarkSearch}" />
+                            <ComboBox x:Name="cbSortOrder" Grid.Column="2" MinWidth="100" HorizontalAlignment="Center" VerticalAlignment="Center" ItemsSource="{Binding Source={local:EnumBindingSource {x:Type scryfall:SortOrder}}}" SelectedIndex="0" />
+                            <ComboBox x:Name="cbSortDirection" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" ItemsSource="{Binding Source={local:EnumBindingSource {x:Type scryfall:SortDirection}}}" SelectedIndex="0" />
+                            <Button x:Name="btnSearch" Grid.Column="4" Margin="10,2" Padding="15,0" Click="btnSearch_Click" Content="Search" IsEnabled="{Binding IsLoadingPage, Converter={StaticResource InvertBooleanConverter}}" />
                         </Grid>
                         <Grid Grid.Row="1">
                             <Grid Grid.Row="1">
@@ -239,23 +170,10 @@
                                     <ColumnDefinition Width="5" />
                                     <ColumnDefinition Width="0" />
                                 </Grid.ColumnDefinitions>
-                                <ListView
-                                    x:Name="lvSearch"
-                                    ItemsSource="{Binding Path=(local:CardCollection.Current).CurrentSearch.Data}"
-                                    ScrollViewer.ScrollChanged="lvSearch_ScrollChanged"
-                                    Style="{StaticResource ImageGrid}" />
+                                <ListView x:Name="lvSearch" ItemsSource="{Binding Path=(local:CardCollection.Current).CurrentSearch.Data}" ScrollViewer.ScrollChanged="lvSearch_ScrollChanged" Style="{StaticResource ImageGrid}" />
 
-                                <GridSplitter
-                                    Grid.Column="1"
-                                    Width="5"
-                                    HorizontalAlignment="Stretch" />
-                                <syncfusion:PropertyGrid
-                                    x:Name="PropGrid"
-                                    Grid.Column="2"
-                                    ButtonPanelVisibility="Collapsed"
-                                    PropertyExpandMode="NestedMode"
-                                    SearchBoxVisibility="Collapsed"
-                                    SelectedObject="{Binding SelectedItem, ElementName=lvSearch}" />
+                                <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+                                <syncfusion:PropertyGrid x:Name="PropGrid" Grid.Column="2" ButtonPanelVisibility="Collapsed" PropertyExpandMode="NestedMode" SearchBoxVisibility="Collapsed" SelectedObject="{Binding SelectedItem, ElementName=lvSearch}" />
                             </Grid>
                         </Grid>
                     </Grid>
@@ -278,21 +196,9 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Margin="0,0,5,0" Text="Collection Name:" />
-                <TextBox
-                    Grid.Column="1"
-                    MinWidth="80"
-                    Text="{Binding Path=(local:CardCollection.Current).Name, Mode=TwoWay}" />
-                <Button
-                    Grid.Row="1"
-                    Margin="5,5"
-                    Command="{Binding LoadCollectionCommand}"
-                    Content="Load" />
-                <Button
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    Margin="5,5"
-                    Command="{Binding SaveCollectionCommand}"
-                    Content="Save" />
+                <TextBox Grid.Column="1" MinWidth="80" Text="{Binding Path=(local:CardCollection.Current).Name, Mode=TwoWay}" />
+                <Button Grid.Row="1" Margin="5,5" Command="{Binding LoadCollectionCommand}" Content="Load" />
+                <Button Grid.Row="1" Grid.Column="1" Margin="5,5" Command="{Binding SaveCollectionCommand}" Content="Save" />
             </Grid>
 
             <Grid VerticalAlignment="Center">
@@ -307,116 +213,24 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <Label
-                    Grid.Row="0"
-                    Grid.Column="0"
-                    Padding="5,2"
-                    HorizontalContentAlignment="Center"
-                    BorderBrush="Black"
-                    BorderThickness="0,0,2,2"
-                    Content="Cards" />
-                <Label
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Padding="5,2"
-                    HorizontalContentAlignment="Center"
-                    BorderBrush="Black"
-                    BorderThickness="2,0,2,2"
-                    Content="Faces" />
-                <Label
-                    Grid.Row="0"
-                    Grid.Column="2"
-                    Width="100"
-                    Padding="5,2"
-                    HorizontalContentAlignment="Center"
-                    BorderBrush="Black"
-                    BorderThickness="2,0,2,2"
-                    Content="Faces to Print" />
-                <Label
-                    Grid.Row="0"
-                    Grid.Column="3"
-                    Padding="5,2"
-                    HorizontalContentAlignment="Center"
-                    BorderBrush="Black"
-                    BorderThickness="2,0,2,2"
-                    Content="Pages" />
-                <Label
-                    Grid.Row="0"
-                    Grid.Column="4"
-                    Padding="5,2"
-                    HorizontalContentAlignment="Center"
-                    BorderBrush="Black"
-                    BorderThickness="2,0,0,2"
-                    Content="Files" />
-                <Label
-                    Grid.Row="1"
-                    Grid.Column="0"
-                    Padding="5,2"
-                    HorizontalContentAlignment="Center"
-                    BorderBrush="Black"
-                    BorderThickness="0,2,2,0"
-                    Content="{Binding Path=(local:CardCollection.Current).CountCards}" />
-                <Label
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    Padding="5,2"
-                    HorizontalContentAlignment="Center"
-                    BorderBrush="Black"
-                    BorderThickness="2,2,2,0"
-                    Content="{Binding Path=(local:CardCollection.Current).CountFaces}" />
-                <Label
-                    Grid.Row="1"
-                    Grid.Column="2"
-                    Padding="5,2"
-                    HorizontalContentAlignment="Center"
-                    BorderBrush="Black"
-                    BorderThickness="2,2,2,0"
-                    Content="{Binding Path=(local:CardCollection.Current).CountPrint}" />
-                <Label
-                    Grid.Row="1"
-                    Grid.Column="3"
-                    Padding="5,2"
-                    HorizontalContentAlignment="Center"
-                    BorderBrush="Black"
-                    BorderThickness="2,2,2,0"
-                    Content="{Binding Path=(local:CardCollection.Current).CountPages}"
-                    ContentStringFormat="{}{0:F}" />
-                <Label
-                    Grid.Row="1"
-                    Grid.Column="4"
-                    Padding="5,2"
-                    HorizontalContentAlignment="Center"
-                    BorderBrush="Black"
-                    BorderThickness="2,2,0,0"
-                    Content="{Binding Path=(local:CardCollection.Current).CountFiles}"
-                    ContentStringFormat="{}{0:F}" />
+                <Label Grid.Row="0" Grid.Column="0" Padding="5,2" HorizontalContentAlignment="Center" BorderBrush="Black" BorderThickness="0,0,2,2" Content="Cards" />
+                <Label Grid.Row="0" Grid.Column="1" Padding="5,2" HorizontalContentAlignment="Center" BorderBrush="Black" BorderThickness="2,0,2,2" Content="Faces" />
+                <Label Grid.Row="0" Grid.Column="2" Width="100" Padding="5,2" HorizontalContentAlignment="Center" BorderBrush="Black" BorderThickness="2,0,2,2" Content="Faces to Print" />
+                <Label Grid.Row="0" Grid.Column="3" Padding="5,2" HorizontalContentAlignment="Center" BorderBrush="Black" BorderThickness="2,0,2,2" Content="Pages" />
+                <Label Grid.Row="0" Grid.Column="4" Padding="5,2" HorizontalContentAlignment="Center" BorderBrush="Black" BorderThickness="2,0,0,2" Content="Files" />
+                <Label Grid.Row="1" Grid.Column="0" Padding="5,2" HorizontalContentAlignment="Center" BorderBrush="Black" BorderThickness="0,2,2,0" Content="{Binding Path=(local:CardCollection.Current).CountCards}" />
+                <Label Grid.Row="1" Grid.Column="1" Padding="5,2" HorizontalContentAlignment="Center" BorderBrush="Black" BorderThickness="2,2,2,0" Content="{Binding Path=(local:CardCollection.Current).CountFaces}" />
+                <Label Grid.Row="1" Grid.Column="2" Padding="5,2" HorizontalContentAlignment="Center" BorderBrush="Black" BorderThickness="2,2,2,0" Content="{Binding Path=(local:CardCollection.Current).CountPrint}" />
+                <Label Grid.Row="1" Grid.Column="3" Padding="5,2" HorizontalContentAlignment="Center" BorderBrush="Black" BorderThickness="2,2,2,0" Content="{Binding Path=(local:CardCollection.Current).CountPages}" ContentStringFormat="{}{0:F}" />
+                <Label Grid.Row="1" Grid.Column="4" Padding="5,2" HorizontalContentAlignment="Center" BorderBrush="Black" BorderThickness="2,2,0,0" Content="{Binding Path=(local:CardCollection.Current).CountFiles}" ContentStringFormat="{}{0:F}" />
             </Grid>
             <Separator />
             <Grid>
-                <StackPanel
-                    Background="Transparent"
-                    Orientation="Horizontal"
-                    Visibility="{Binding CardsToDoc.IsRunning, Converter={StaticResource InvertBooleanVisibilityConverter}}">
-                    <Button
-                        Margin="5,0"
-                        Padding="5"
-                        VerticalAlignment="Center"
-                        Command="{Binding OpenFolderCommand}"
-                        Content="Öffne Ordner" />
-                    <Button
-                        Margin="5,0"
-                        Padding="5"
-                        VerticalAlignment="Center"
-                        Command="{Binding StartPrintingCommand, IsAsync=True}"
-                        Content="Save To Doc"
-                        IsEnabled="{Binding CardsToDoc.IsRunning, Converter={StaticResource InvertBooleanConverter}}" />
+                <StackPanel Background="Transparent" Orientation="Horizontal" Visibility="{Binding CardsToDoc.IsRunning, Converter={StaticResource InvertBooleanVisibilityConverter}}">
+                    <Button Margin="5,0" Padding="5" VerticalAlignment="Center" Command="{Binding OpenFolderCommand}" Content="Öffne Ordner" />
+                    <Button Margin="5,0" Padding="5" VerticalAlignment="Center" Command="{Binding StartPrintingCommand, IsAsync=True}" Content="Save To Doc" IsEnabled="{Binding CardsToDoc.IsRunning, Converter={StaticResource InvertBooleanConverter}}" />
                     <Label VerticalAlignment="Center" Content="Print Format: " />
-                    <ComboBox
-                        x:Name="cbPicFormat"
-                        MinWidth="100"
-                        VerticalAlignment="Center"
-                        ItemsSource="{Binding Source={local:EnumBindingSource {x:Type local:ImageTypeEnum}}}"
-                        SelectedValue="{Binding Path=(local:SearchViewModel.ImageFormat), Mode=TwoWay}" />
+                    <ComboBox x:Name="cbPicFormat" MinWidth="100" VerticalAlignment="Center" ItemsSource="{Binding Source={local:EnumBindingSource {x:Type local:ImageTypeEnum}}}" SelectedValue="{Binding Path=(local:SearchViewModel.ImageFormat), Mode=TwoWay}" />
                 </StackPanel>
                 <Grid Visibility="{Binding CardsToDoc.IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <Grid.ColumnDefinitions>
@@ -436,18 +250,9 @@
                                 </MultiBinding>
                             </TextBlock.Text>
                         </TextBlock>
-                        <ProgressBar
-                            Grid.Row="1"
-                            Margin="5,1"
-                            Maximum="{Binding Path=(local:CardCollection.Current).CountPrint}"
-                            Value="{Binding CardsToDoc.WordDoc.CountPictures}" />
+                        <ProgressBar Grid.Row="1" Margin="5,1" Maximum="{Binding Path=(local:CardCollection.Current).CountPrint}" Value="{Binding CardsToDoc.WordDoc.CountPictures}" />
                     </Grid>
-                    <Button
-                        Grid.Column="1"
-                        Padding="20,5"
-                        Command="{Binding StopCommand}"
-                        Content="X"
-                        IsEnabled="{Binding CardsToDoc.IsRunning}" />
+                    <Button Grid.Column="1" Padding="20,5" Command="{Binding StopCommand}" Content="X" IsEnabled="{Binding CardsToDoc.IsRunning}" />
                 </Grid>
             </Grid>
 

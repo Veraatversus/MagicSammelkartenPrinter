@@ -64,6 +64,6 @@ namespace Scryfall.API.Models
         /// </summary>
         [JsonProperty(PropertyName = "data")]
         public ObservableCollection<Card> Data { get; set; } = new ObservableCollection<Card>();
-
-    }
+    public int CardsProPage { get; internal set; }
+  }
 }

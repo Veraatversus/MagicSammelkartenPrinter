@@ -21,16 +21,9 @@
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <sys:Double x:Key="ImageHeight">250</sys:Double>
             <DataTemplate DataType="{x:Type sf:Card}">
-                <Grid
-                    x:Name="maingrid"
-                    d:DataContext="{d:DesignData /SampleData/card.xaml}"
-                    Background="Transparent"
-                    PreviewMouseDown="Maingrid_PreviewMouseDown">
+                <Grid x:Name="maingrid" d:DataContext="{d:DesignData /SampleData/card.xaml}" Background="Transparent" PreviewMouseDown="Maingrid_PreviewMouseDown">
                     <Image DataContext="{DynamicResource ImageHeight}" Source="{Binding DataContext.ShowImage, ElementName=maingrid, Mode=OneWay}" />
-                    <Border
-                        BorderBrush="Red"
-                        BorderThickness="4"
-                        Visibility="{Binding (Selector.IsSelected), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Border BorderBrush="Red" BorderThickness="4" Visibility="{Binding (Selector.IsSelected), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <Grid ToolTipService.InitialShowDelay="0">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="3*" />
@@ -40,14 +33,8 @@
                                 <RowDefinition Height="40*" />
                                 <RowDefinition Height="10*" />
                             </Grid.RowDefinitions>
-                            <Grid
-                                Grid.Row="1"
-                                Background="Transparent"
-                                ToolTip="{Binding Name}" />
-                            <Grid
-                                Grid.Row="3"
-                                Background="Transparent"
-                                ToolTip="{Binding TypeLine}" />
+                            <Grid Grid.Row="1" Background="Transparent" ToolTip="{Binding Name}" />
+                            <Grid Grid.Row="3" Background="Transparent" ToolTip="{Binding TypeLine}" />
                             <Grid Grid.Row="4" Background="Transparent">
                                 <Grid.ToolTip>
                                     <TextBlock TextWrapping="Wrap"><Run Text="{Binding OracleText}" /><LineBreak /><Run FontStyle="Italic" Text="{Binding FlavorText}" /></TextBlock>
@@ -65,10 +52,7 @@
                             <ColumnDefinition />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <RepeatButton
-                            Grid.Row="1"
-                            Command="{Binding Source={x:Static local:SearchViewModel.DecreaseCountCommand}}"
-                            Visibility="{Binding ElementName=maingrid, Path=IsMouseOver, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <RepeatButton Grid.Row="1" Command="{Binding Source={x:Static local:SearchViewModel.DecreaseCountCommand}}" Visibility="{Binding ElementName=maingrid, Path=IsMouseOver, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <RepeatButton.CommandParameter>
                                 <PriorityBinding>
                                     <Binding Path="SelectedItems" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ListView}" />
@@ -77,25 +61,11 @@
                             </RepeatButton.CommandParameter>
                             <Image Source="Assets/arrow_down.png" />
                         </RepeatButton>
-                        <Viewbox
-                            Grid.Row="1"
-                            Grid.Column="1"
-                            Stretch="Uniform">
-                            <syncfusion:IntegerTextBox
-                                Grid.Row="1"
-                                Grid.Column="1"
-                                HorizontalAlignment="Center"
-                                ApplyZeroColor="True"
-                                MinValue="0"
-                                TextAlignment="Center"
-                                Value="{Binding Count}" />
+                        <Viewbox Grid.Row="1" Grid.Column="1" Stretch="Uniform">
+                            <syncfusion:IntegerTextBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" ApplyZeroColor="True" MinValue="0" TextAlignment="Center" Value="{Binding Count}" />
                         </Viewbox>
 
-                        <RepeatButton
-                            Grid.Row="1"
-                            Grid.Column="2"
-                            Command="{Binding Source={x:Static local:SearchViewModel.IncreaseCountCommand}}"
-                            Visibility="{Binding ElementName=maingrid, Path=IsMouseOver, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <RepeatButton Grid.Row="1" Grid.Column="2" Command="{Binding Source={x:Static local:SearchViewModel.IncreaseCountCommand}}" Visibility="{Binding ElementName=maingrid, Path=IsMouseOver, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <RepeatButton.CommandParameter>
                                 <PriorityBinding>
                                     <Binding Path="SelectedItems" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ListView}" />

@@ -97,17 +97,19 @@ namespace Sammelkarten {
             saved_list_references.Clear();
 
             //List Of Cards
-            var myDiv = Browser.Document.GetElementsByTagName("DIV").OfType<HtmlElement>().Where(div => ((HTMLDivElement)div.DomElement).className == "card-grid-item");
+            var myDiv = Browser.Document.GetElementsByTagName("DIV").OfType<HtmlElement>().Where(div => ((HTMLDivElement)div.DomElement).className?.Trim() == "card-grid-item");
             foreach (var item in myDiv) {
                 AttachButtons(item, f => ((HTMLDivElement)f.DomElement).getAttribute("data-card-id").ToString());
             }
 
             //Single Card
-            myDiv = Browser.Document.GetElementsByTagName("DIV").OfType<HtmlElement>().Where(div => ((HTMLDivElement)div.DomElement).className == "card-image-front");
+            myDiv = Browser.Document.GetElementsByTagName("DIV").OfType<HtmlElement>().Where(div => ((HTMLDivElement)div.DomElement).className?.Trim() == "card-image-front");
             foreach (var item in myDiv) {
                 AttachButtons(item, f => (Browser.Document.GetElementsByTagName("META").GetElementsByName("scryfall:card:id").OfType<HtmlElement>().FirstOrDefault()?.DomElement as IHTMLMetaElement)?.content);
             }
-            var main = Browser.Document.GetElementsByTagName("DIV").OfType<HtmlElement>().FirstOrDefault(el => (el.DomElement as HTMLDivElement).className == "card-grid ");
+
+            //All Cards
+            var main = Browser.Document.GetElementsByTagName("DIV").OfType<HtmlElement>().FirstOrDefault(div => ((HTMLDivElement)div.DomElement).className?.Trim() == "card-grid");
             if (main != null) {
                 // var div = main.Children[2];
                 main.InsertAdjacentElement(HtmlElementInsertionOrientation.BeforeBegin, CreateHeaderDiv());
@@ -209,7 +211,7 @@ namespace Sammelkarten {
             if (!IsAdding) {
                 IsAdding = true;
                 if (lastpage.SearchQuery != Browser.Url.ToString()) {
-                    var myDiv = Browser.Document.GetElementsByTagName("DIV").OfType<HtmlElement>().Where(div => ((HTMLDivElement)div.DomElement).className == "card-grid-item");
+                    var myDiv = Browser.Document.GetElementsByTagName("DIV").OfType<HtmlElement>().Where(div => ((HTMLDivElement)div.DomElement).className?.Trim() == "card-grid-item");
                     var IdList = myDiv.Select(f => new JObject(new JProperty("id", ((HTMLDivElement)f.DomElement).getAttribute("data-card-id").ToString()))).ToArray();
 
                     var jsonObj = new JObject(new JProperty("identifiers", new JArray(IdList)));
